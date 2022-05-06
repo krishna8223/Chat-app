@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,200;0,300;0,400;0,700;1,500&display=swap');
+
+body {
+  margin: 0;
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif; */
+    font-family: 'Josefin Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* overflow:hidden; */
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.selected{
+  background-color:#0f172a
+}
+.right{
+  align-self: flex-end;
+}
+.mesageDiv::-webkit-scrollbar{
+  /* scrollbar-width: thin; */
+  width: 5px;
+
+}
+.mesageDiv::-webkit-scrollbar-track{
+  /* scrollbar-width: thin; */
+  width: 8px;
+
+}
+.mesageDiv::-webkit-scrollbar-thumb{
+  /* scrollbar-width: thin; */
+  width: 8px;
+  background-color: gray;
+  border-radius: 30px;
+
+}
