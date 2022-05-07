@@ -108,9 +108,10 @@ const getUser = async (req, res, next) => {
 
 const searchUser = async (req,res,next) =>{
     const {username} = req.params 
-    console.log(typeof username);
+    // console.log(typeof username);
     try {
-        const users =await User.find({userName:`/${username}/`})
+        // const users =await User.find({userName:{ $regex : /^username/}})
+        const users =await User.find({userName:new RegExp('^'+username,'i')})
         res.json({users,status:true})
     } catch (error) {
         console.log(error);

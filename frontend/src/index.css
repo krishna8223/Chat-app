@@ -26,17 +26,15 @@ code {
 .right{
   align-self: flex-end;
 }
-.mesageDiv::-webkit-scrollbar{
-  /* scrollbar-width: thin; */
+.mesageDiv::-webkit-scrollbar,.activeUsers::-webkit-scrollbar,.findInput::-webkit-scrollbar{
   width: 5px;
-
 }
-.mesageDiv::-webkit-scrollbar-track{
-  /* scrollbar-width: thin; */
+
+.mesageDiv::-webkit-scrollbar-track,.activeUsers::-webkit-scrollbar-track,.findInput::-webkit-scrollbar-track{
   width: 8px;
 
 }
-.mesageDiv::-webkit-scrollbar-thumb{
+.mesageDiv::-webkit-scrollbar-thumb,.activeUsers::-webkit-scrollbar-thumb,.findInput::-webkit-scrollbar-thumb{
   /* scrollbar-width: thin; */
   width: 8px;
   background-color: gray;
