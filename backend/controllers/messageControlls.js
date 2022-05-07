@@ -28,7 +28,9 @@ const getMessage = async (req, res, next) => {
         const sortMessages = getMessage.map((message) => {
             return {
                 fromSelf: message.sender.toString() === from,
-                message: message.message
+                message: message.message,
+                createdAt:message.createdAt
+
             }
         })
 

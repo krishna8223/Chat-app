@@ -2,6 +2,10 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { getMessages, setMessages } from '../utils/apiRoutes';
+import Header from './Header';
+// import ISODateFormatter from 'iso-date-formatter';
+// import dateFormat from "dateformat";
+// import moment from 'moment';
 
 const Mesages = ({ SelectedUser, Socket }) => {
 
@@ -11,10 +15,6 @@ const Mesages = ({ SelectedUser, Socket }) => {
 
 
     const messageh2 = useRef()
-
-const navigate = useNavigate()
-
-
 
     const handeMsgSubmit = (e) => {
         e.preventDefault()
@@ -33,17 +33,16 @@ const navigate = useNavigate()
         const msg = [...allMessages]
         msg.push({
             message,
-            fromSelf: true
+            fromSelf: true,
+            // createdAt:moment().format()
         })
         setAllMessages(msg)
         setMessage('')
-        // scrollToBottom()
     }
 
 
     useEffect(() => {
         messageh2.current?.scrollIntoView({ behavior: 'smooth' })
-        console.log('scrolled');
     }, [allMessages])
 
 
@@ -67,11 +66,7 @@ const navigate = useNavigate()
         getMessage()
     }, [SelectedUser])
 
-    const logout = () =>{
-        localStorage.removeItem('user')
-        Socket.emit('removeUser',{userId:User.id})
-        navigate('/')
-    }
+   
 
 
     return (
@@ -80,24 +75,29 @@ const navigate = useNavigate()
                 <div className="messageBoxWrapper over flex flex-col h-full ">
 
                     <div className="header basis-[10%]">
-                        <h2 onClick={logout}>Logout</h2>
+                         <Header selectedUser={SelectedUser} socket={Socket}/>   
+
                     </div>
-                    <div  className='mesageDiv px-[4px] basis-[80%] flex flex-col gap-1 max-h-[750px] overflow-y-auto overflow-x-hidden'>
-                        message
+                    <div  className='mesageDiv mt-2 px-[4px] basis-[80%] flex flex-col gap-1 max-h-[750px] overflow-y-auto overflow-x-hidden'>
                         {
                             allMessages !== undefined ?
                                 // allMessages.lenght < 0?
                                 allMessages.map((msg, index) => {
-                                    return <h2 ref={messageh2} className={`${msg.fromSelf ? 'right' : ''} text-white text-2xl bg-slate-600 max-w-[300px] p-4 rounded-lg`} key={index}>{msg.message}</h2>
+                                    return <>
+                                    <div className={`message ${msg.fromSelf ? 'right' : ''} w-fit text-white bg-slate-600 max-w-[300px] p-4 rounded-lg`}>
+                                        <h2 ref={messageh2} className= 'text-2xl' key={index}>{msg.message}</h2>
+                                        {/* <p> {ISODateFormatter(msg.createdAt, { format: 'dd MM yyyy HH:mm' })}</p> */}
+                                    </div>
+                                    </>
                                 })
                                 :
-                                <h2>empty</h2>
+                                <h2>Please start typing Message...</h2>
                         }
 
                     </div>
-                    <form onSubmit={handeMsgSubmit} className='basis-[10%] flex items-center'>
-                        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} className='w-[90%] h-12  ' />
-                        <button type="submit">Submit</button>
+                    <form onSubmit={handeMsgSubmit} className='basis-[10%] flex items-center justify-center'>
+                        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} className='w-[70%] p-2 text-xl h-12 border-none outline-none rounded-l-md rounded-bl-md  ' />
+                        <button className='h-12 bg-orange-300 rounded-r-md rounded-br-md px-4' type="submit">Submit</button>
                     </form>
                 </div>
             </section>

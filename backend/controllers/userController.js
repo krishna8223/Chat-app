@@ -105,4 +105,19 @@ const getUser = async (req, res, next) => {
 
 }
 
-module.exports = { register, login, avatar, getUser }
+
+const searchUser = async (req,res,next) =>{
+    const {username} = req.params 
+    console.log(typeof username);
+    try {
+        const users =await User.find({userName:`/${username}/`})
+        res.json({users,status:true})
+    } catch (error) {
+        console.log(error);
+        res.json({status:false})
+        
+    }
+
+}
+
+module.exports = { register, login, avatar, getUser,searchUser }

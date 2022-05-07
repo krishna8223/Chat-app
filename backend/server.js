@@ -23,6 +23,11 @@ const server = app.listen(process.env.PORT,()=>{
     console.log('server started');
 })
 
+
+                    // Socket.io 
+
+
+
 const io = socket(server, {
     cors: {
       origin: "http://localhost:3000",
@@ -32,6 +37,8 @@ const io = socket(server, {
   
   let users = []
 
+
+ 
 
 const getUser = (data) => {
   const u =   users.find((user)=>{
@@ -72,6 +79,8 @@ const changeActiveUser = (user) => {
     }
 }
 
+// Socket Events 
+
 io.on("connection",(socket) => {
 
     socket.on('addUser',(user)=>{
@@ -84,6 +93,17 @@ io.on("connection",(socket) => {
             // console.log('user Updated');
         }else{
             users[userIndex].id = user.socketId
+        }
+
+            // Showing online staus when a user joint
+
+        allActiveUsers = users.filter((User)=>{
+            return User.activeUserId === user.user
+        })
+        if(allActiveUsers.length>0){
+            for (let i = 0; i < allActiveUsers.length; i++) {
+                io.to(allActiveUsers[i].id).emit('getOnlineStatus',{status:true})
+            }
         }
         // console.log(users);
         // console.log("addUser#######");
@@ -105,29 +125,67 @@ io.on("connection",(socket) => {
         }
     })
 
+
+    socket.on('checkOnline',({selectedUserId,userSocketId})=>{
+        // console.log(selectedUserId);
+        // console.log(users);
+
+        // Checking the user is online or not 
+
+        const is = users.findIndex((user)=>{
+            return user.user === selectedUserId
+        })
+            if(is!== -1){
+                // console.log(true);
+                io.to(userSocketId).emit('getOnlineStatus',{status:true})
+            }
+            else{
+                // console.log(false);
+                io.to(userSocketId).emit('getOnlineStatus',{status:false})
+            }
+    })
+
     socket.on("removeUser", ({userId}) => {
         logout(userId);
+
+        //  Removing online status when a user logout
+
+        allActiveUsers = users.filter((user)=>{
+            return user.activeUserId === userId
+        })
+        if(allActiveUsers.length>0){
+            for (let i = 0; i < allActiveUsers.length; i++) {
+                io.to(allActiveUsers[i].id).emit('getOnlineStatus',{status:false})
+            }
+        }
+    
     });
     
     socket.on("disconnect", () => {
+
+        // Removing online status when a user disconnect
+        
+        const disconnectedUserIndex = users.findIndex((user)=>{
+            return user.id === socket.id
+        })
+
+        if(disconnectedUserIndex!==-1){
+
+            const allActiveUsers = users.filter((user)=>{
+                return user.activeUserId === users[disconnectedUserIndex].user
+            })
+            if(allActiveUsers.length>0){
+                for (let i = 0; i < allActiveUsers.length; i++) {
+                    io.to(allActiveUsers[i].id).emit('getOnlineStatus',{status:false})
+                }
+            }
+        }
+
         removeUser(socket.id);
+
       });
+
+
+
 })
 
-
-
-
-//   global.onlineUsers = new Map();
-//   io.on("connection", (socket) => {
-//     global.chatSocket = socket;
-//     socket.on("add-user", (userId) => {
-//       onlineUsers.set(userId, socket.id);
-//     });
-  
-//     socket.on("send-msg", (data) => {
-//       const sendUserSocket = onlineUsers.get(data.to);
-//       if (sendUserSocket) {
-//         socket.to(sendUserSocket).emit("msg-recieve", data.msg);
-//       }
-//     });
-//   });
