@@ -21,7 +21,7 @@ code {
     monospace;
 }
 .selected{
-  background-color:#0f172a
+  background-color:#334155
 }
 .right{
   align-self: flex-end;

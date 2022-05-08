@@ -18,26 +18,28 @@ const Mesages = ({ SelectedUser, Socket }) => {
 
     const handeMsgSubmit = (e) => {
         e.preventDefault()
+        if(message!==''){
 
-        const { data } = axios.post(setMessages, {
-            from: User.id,
-            to: SelectedUser._id,
-            message
-        })
-
-        Socket.emit('send-msg', {
-            from: User.id,
-            to: SelectedUser._id,
-            message: message
-        })
-        const msg = [...allMessages]
-        msg.push({
-            message,
-            fromSelf: true,
+            const { data } = axios.post(setMessages, {
+                from: User.id,
+                to: SelectedUser._id,
+                message
+            })
+            
+            Socket.emit('send-msg', {
+                from: User.id,
+                to: SelectedUser._id,
+                message: message
+            })
+            const msg = [...allMessages]
+            msg.push({
+                message,
+                fromSelf: true,
             // createdAt:moment().format()
         })
         setAllMessages(msg)
         setMessage('')
+    }
     }
 
 
@@ -85,7 +87,7 @@ const Mesages = ({ SelectedUser, Socket }) => {
                                 allMessages.map((msg, index) => {
                                     return <>
                                     <div className={`message ${msg.fromSelf ? 'right' : ''} w-fit text-white bg-slate-600 max-w-[300px] p-4 rounded-lg`}>
-                                        <h2 ref={messageh2} className= 'text-2xl' key={index}>{msg.message}</h2>
+                                        <h2 ref={messageh2} className= 'break-all text-2xl' key={index}>{msg.message}</h2>
                                         {/* <p> {ISODateFormatter(msg.createdAt, { format: 'dd MM yyyy HH:mm' })}</p> */}
                                     </div>
                                     </>

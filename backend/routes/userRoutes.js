@@ -12,6 +12,6 @@ router.post('/setAvatar', avatar)
 
 router.get('/getUsers/:id', getUser)
 
-router.get('/SearchUser/:username', searchUser)
+router.post('/SearchUser', searchUser)
 
 module.exports = router
