@@ -61,7 +61,8 @@ const login = async (req, res, next) => {
             id: userDetail.id,
             userName: userDetail.userName,
             email: userDetail.email,
-            isAvatar: userDetail.isAvatarImageSet
+            isAvatar: userDetail.isAvatarImageSet,
+            avatarImage:userDetail.avatarImage
         }
         return res.status(200).json({ status: true, user })
 

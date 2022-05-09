@@ -120,11 +120,11 @@ io.on("connection",(socket) => {
             io.to(user.id).emit('recieve-msg',{
                 message:data.message,
                 fromSelf:false,
-                from:data.from
+                from:data.from,
+                createdAt:data.createdAt
             })
         }
     })
-
 
     socket.on('checkOnline',({selectedUserId,userSocketId})=>{
         // console.log(selectedUserId);
@@ -160,6 +160,21 @@ io.on("connection",(socket) => {
         }
     
     });
+
+    socket.on('notification',({from,to})=>{
+        const check = users.filter((user)=>{
+            return user.user === to
+        })
+
+        if(check.length>0){
+           io.to(check[0].id).emit('receiveNotification',{from:{
+               _id:from.id,
+               userName : from.userName,
+               email:from.email,
+               avatarImage : from.avatarImage
+           }}) 
+        }
+    })
     
     socket.on("disconnect", () => {
 
@@ -184,7 +199,6 @@ io.on("connection",(socket) => {
         removeUser(socket.id);
 
       });
-
 
 
 })

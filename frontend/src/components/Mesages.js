@@ -1,11 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
 import { getMessages, setMessages } from '../utils/apiRoutes';
 import Header from './Header';
-// import ISODateFormatter from 'iso-date-formatter';
-// import dateFormat from "dateformat";
-// import moment from 'moment';
+import dateFormat from "dateformat";
 
 const Mesages = ({ SelectedUser, Socket }) => {
 
@@ -13,49 +10,69 @@ const Mesages = ({ SelectedUser, Socket }) => {
     const [message, setMessage] = useState('')
     const [allMessages, setAllMessages] = useState([])
 
-
     const messageh2 = useRef()
 
+    // ------   Handing message submit 
     const handeMsgSubmit = (e) => {
         e.preventDefault()
-        if(message!==''){
 
+        if (message !== '') {
+
+            // Post api to save our message to Database
             const { data } = axios.post(setMessages, {
                 from: User.id,
                 to: SelectedUser._id,
                 message
             })
-            
+
+            // Event emitting to backend with our message and sender id and recievers id
             Socket.emit('send-msg', {
                 from: User.id,
                 to: SelectedUser._id,
-                message: message
+                message: message,
+                createdAt: new Date()
             })
+
+            // Event for notification
+            Socket.emit('notification', {
+                from: User,
+                to: SelectedUser._id
+            })
+
+            // Pushig our message to allMessages state
             const msg = [...allMessages]
             msg.push({
                 message,
                 fromSelf: true,
-            // createdAt:moment().format()
-        })
-        setAllMessages(msg)
-        setMessage('')
+                createdAt: new Date()
+            })
+            setAllMessages(msg)
+            setMessage('')
+        }
     }
-    }
+// ------   
 
 
-    useEffect(() => {
+// ------   Auto scroll to down when message is recievend or send
+    useEffect(() => {                          
         messageh2.current?.scrollIntoView({ behavior: 'smooth' })
     }, [allMessages])
+// ------   
 
 
-    Socket.on('recieve-msg', (payload) => {
+    // ------    Recieving new message from socket
+    Socket.on('recieve-msg', (payload) => {          
+        // We check that sender and SelectedUser are same
         if (payload.from === SelectedUser._id) {
-            setAllMessages([...allMessages, { message: payload.message, fromSelf: payload.fromSelf }])
+
+            setAllMessages([...allMessages, { message: payload.message, fromSelf: payload.fromSelf, createdAt: payload.createdAt }])
         }
     })
+    // ------   
 
 
-    useEffect(() => {
+    // ------   This is api call to get all messages betwwen user and selectedUser 
+    useEffect(() => {                   
 
         const getMessage = async () => {
             setAllMessages([])
@@ -67,8 +84,7 @@ const Mesages = ({ SelectedUser, Socket }) => {
         }
         getMessage()
     }, [SelectedUser])
-
-   
+    // ------
 
 
     return (
@@ -77,19 +93,19 @@ const Mesages = ({ SelectedUser, Socket }) => {
                 <div className="messageBoxWrapper over flex flex-col h-full ">
 
                     <div className="header basis-[10%]">
-                         <Header selectedUser={SelectedUser} socket={Socket}/>   
+                        <Header selectedUser={SelectedUser} socket={Socket} />
 
                     </div>
-                    <div  className='mesageDiv mt-2 px-[4px] basis-[80%] flex flex-col gap-1 max-h-[750px] overflow-y-auto overflow-x-hidden'>
+                    <div className='mesageDiv mt-2 px-[4px] basis-[80%] flex flex-col gap-1 max-h-[750px] overflow-y-auto overflow-x-hidden'>
                         {
                             allMessages !== undefined ?
                                 // allMessages.lenght < 0?
                                 allMessages.map((msg, index) => {
                                     return <>
-                                    <div className={`message ${msg.fromSelf ? 'right' : ''} w-fit text-white bg-slate-600 max-w-[300px] p-4 rounded-lg`}>
-                                        <h2 ref={messageh2} className= 'break-all text-2xl' key={index}>{msg.message}</h2>
-                                        {/* <p> {ISODateFormatter(msg.createdAt, { format: 'dd MM yyyy HH:mm' })}</p> */}
-                                    </div>
+                                        <div className={`message ${msg.fromSelf ? 'right' : ''} w-fit text-white bg-slate-600 max-w-[300px] p-4 rounded-lg`}>
+                                            <h2 ref={messageh2} className='break-all text-2xl' key={index}>{msg.message}</h2>
+                                            <p className='text-right text-orange-400'>{dateFormat(new Date(msg.createdAt), " mmmm dS, h:MM:ss TT")}</p>
+                                        </div>
                                     </>
                                 })
                                 :

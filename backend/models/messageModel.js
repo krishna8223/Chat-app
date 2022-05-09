@@ -11,6 +11,10 @@ const messageModel = mongoose.Schema({
         ref: 'User',
         required: true
     },
+    time:{
+        type:Date,
+        default: new Date
+    }
    
 },
     {
