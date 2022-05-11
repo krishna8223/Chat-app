@@ -90,7 +90,7 @@ const Mesages = ({ SelectedUser, Socket }) => {
     return (
         <>
             <section className='h-full'>
-                <div className="messageBoxWrapper over flex flex-col h-full ">
+                <div className="messageBoxWrapper max-h-[862px] over flex flex-col h-full ">
 
                     <div className="header basis-[10%]">
                         <Header selectedUser={SelectedUser} socket={Socket} />
@@ -103,8 +103,8 @@ const Mesages = ({ SelectedUser, Socket }) => {
                                 allMessages.map((msg, index) => {
                                     return <>
                                         <div className={`message ${msg.fromSelf ? 'right' : ''} w-fit text-white bg-slate-600 max-w-[300px] p-4 rounded-lg`}>
-                                            <h2 ref={messageh2} className='break-all text-2xl' key={index}>{msg.message}</h2>
-                                            <p className='text-right text-orange-400'>{dateFormat(new Date(msg.createdAt), " mmmm dS, h:MM:ss TT")}</p>
+                                            <h2 ref={messageh2} className='break-all text-lg lg:text-2xl' key={index}>{msg.message}</h2>
+                                            <p className='text-right text-orange-300'>{dateFormat(new Date(msg.createdAt), " mmmm dS, h:MM:ss TT")}</p>
                                         </div>
                                     </>
                                 })

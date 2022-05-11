@@ -1,4 +1,5 @@
-const host = 'http://localhost:5000'
+// const host = 'http://localhost:5000'
+const host = ''
 export const RegisterApiRoute = `${host}/api/auth/register`
 export const LoginApiRoute = `${host}/api/auth/login`
 export const SetAvatarApiRoute = `${host}/api/auth/setAvatar`

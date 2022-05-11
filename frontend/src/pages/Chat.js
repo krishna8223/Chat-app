@@ -3,7 +3,7 @@ import Mesages from '../components/Mesages'
 import Users from '../components/Users'
 
 import io  from 'socket.io-client';
-const socket = io('http://localhost:5000')
+const socket = io()
 
 const Chat = () => {
 
@@ -17,7 +17,7 @@ const Chat = () => {
   return (
     <>
       <section className='h-[100vh] flex justify-center  bg-slate-900 w-[100vw]'>
-        <div className='main-container m-auto grid w-[90%] h-[90%] max-h-[90%]  grid-cols-[21%,79%]'>
+        <div className='main-container overflow-x-auto m-auto grid w-[90%] h-[90%] max-h-[90%]  lg:grid-cols-[20%,80%] md:grid-cols-[35%,65%] grid-cols-[58%,145%] sm:grid-cols-[43%,128%] '>
           <div className="contactsSide bg-slate-800 border-t-[1px] border-t-orange-300">
             <Users selectedUser= {currentSelected} Socket={socket}/>
           </div>

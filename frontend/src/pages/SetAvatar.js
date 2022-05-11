@@ -52,7 +52,6 @@ const SetAvatar = () => {
           // setAvatar([...avatar,buffer.toString('base64')])
         }
         setAvatar(avatars)
-        console.log(avatar);
         setLoading(false)
       }
       getAvatars()

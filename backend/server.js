@@ -19,9 +19,21 @@ mongoose.connect(process.env.MONGO_URL)
     console.log(err.message);
 })
 
+app.use(express.static("public"));
+
+const path = require("path");
+app.get("/", (req, res) => {
+ res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+
+
 const server = app.listen(process.env.PORT,()=>{
     console.log('server started');
 })
+
+
+
 
 
                     // Socket.io 

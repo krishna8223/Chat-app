@@ -10,7 +10,6 @@ const Login = () => {
   const navigate = useNavigate()
   useEffect(()=>{
     const user = localStorage.getItem('user')
-    console.log(user);
     if(user){
       navigate('/chat')
     }
@@ -31,7 +30,6 @@ const Login = () => {
       email,password
     })  
 
-    console.log(data);
 
     if(data.status == false){
       toast(data.message,{
